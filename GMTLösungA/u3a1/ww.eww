@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspace>
+    <project>
+        <path>$WS_DIR$\..\test\test.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\u3a1.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\..\u3a2\u3a2.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\..\u3a4\u3a4.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\..\u3u3\u3u3.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\..\u4a1\u4a1.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\..\u4a2\u4a2.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\..\u4a3\u4a3.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\..\u4a4\u4a4.ewp</path>
+    </project>
+    <batchBuild />
+</workspace>
