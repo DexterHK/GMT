@@ -1,0 +1,25 @@
+#include "msp430.h"                     ; #define controlled include file
+
+        NAME    main                    ; module name
+
+        PUBLIC  main                    ; make the main label vissible
+                                        ; outside this module
+        ORG     0FFFEh
+        DC16    init                    ; set reset vector to 'init' label
+
+        RSEG    CSTACK                  ; pre-declaration of segment
+        RSEG    CODE                    ; place program in 'CODE' segment
+
+init:   MOV     #SFE(CSTACK), SP        ; set up stack
+
+main:   NOP                             ; main program
+        MOV.W   #WDTPW+WDTHOLD,&WDTCTL  ; Stop watchdog timer
+        BIS.B #0B,&P2DIR                ; If DIR 1 == Output, also 0 Input
+        BIS.B  #1B,&P2REN                ; IF Pull-Up oder Down = 1, Input without pull up or down = 0
+        BIS.B #1B,&P2OUT                ; If 0 == Pull Down, 1 == Pull Up
+        
+
+        
+
+
+END
