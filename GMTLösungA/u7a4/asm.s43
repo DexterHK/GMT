@@ -15,14 +15,13 @@
         RSEG    CODE                    ; place program in 'CODE' segment
 
 init:   MOV     #SFE(CSTACK), SP        ; set up stack
-        BIS.B #01B,&P4DIR
+      
 
 main:   NOP                             ; main program
         MOV.W   #WDTPW+WDTHOLD,&WDTCTL  ; Stop watchdog timer
        
-        BIS.B #0B,&P2DIR
-        MOV.B  #0x1,&P2REN
-        
+          BIS.B #01B,&P2DIR
+          BIC.B #0B,&P2OUT
 
         JMP $                           ; jump to current location '$'
                                         ; (endless loop)
