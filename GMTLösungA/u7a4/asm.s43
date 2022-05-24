@@ -20,8 +20,8 @@ init:   MOV     #SFE(CSTACK), SP        ; set up stack
 main:   NOP                             ; main program
         MOV.W   #WDTPW+WDTHOLD,&WDTCTL  ; Stop watchdog timer
        
-          BIS.B #01B,&P2DIR
-          BIC.B #0B,&P2OUT
+          BIS.B #01B,&P4DIR
+          BIS.B #1B,&P4OUT
 
         JMP $                           ; jump to current location '$'
                                         ; (endless loop)
