@@ -1,8 +1,8 @@
 #include "msp430.h"                     ; #define controlled include file
 LED1    EQU     BIT0
 LED2    EQU     BIT7
-MASK    EQU   1111111111111111B
-Delay   EQU   50000
+MASK    EQU   11111111B
+Delay   EQU   5000
 
         NAME    main                    ; module name
 
@@ -19,11 +19,11 @@ init:   MOV     #SFE(CSTACK), SP        ; set up stack
 main:   NOP                             ; main program
         MOV.W   #WDTPW+WDTHOLD,&WDTCTL  ; Stop watchdog timer
         MOV.W   0x0,R5                  ;OUR Delay Counter
-        BIS.W   #LED1,&P1DIR            ;Output
-        BIS.W   #LED1,&P1OUT            ; Einschalten
+        BIS.B   #LED1,&P1DIR            ;Output
+        BIS.B   #LED1,&P1OUT            ; Einschalten
          
-        BIS.W   #LED2,&P4DIR            ;Output 
-        BIC.W   #LED2,&P4OUT            ; Ausschalten
+        BIS.B   #LED2,&P4DIR            ;Output 
+        BIC.B   #LED2,&P4OUT            ; Ausschalten
 
  
 
@@ -31,15 +31,15 @@ main:   NOP                             ; main program
 DelayLoop:
        INC.W  R5
        CMP.W #Delay,R5
-       JNE   #DelayLoop
+       JNE   DelayLoop
        
 Toggle:
-       XOR.W  #MASK,&P1OUT
-       XOR.W  #MASK,&P4OUT
+       XOR.B  #MASK,&P1OUT
+       XOR.B  #MASK,&P4OUT
       
 Reset:
      MOV.W 0x0,R5
-     JMP #DelayLoop
+     JMP DelayLoop
       
 
 
