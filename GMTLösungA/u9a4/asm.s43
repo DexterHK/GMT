@@ -2,7 +2,7 @@
 
 LED1    EQU     BIT0
 B1      EQU     BIT1
-B0      EQU     BIT0
+B0      EQU     BIT1
 MASK    EQU   1111111111111111B
 
         NAME    main                    ; module name
@@ -20,25 +20,25 @@ init:   MOV     #SFE(CSTACK), SP        ; set up stack
 main:   NOP                             ; main program
         MOV.W   #WDTPW+WDTHOLD,&WDTCTL  ; Stop watchdog timer
        
-        BIS.W   #LED1,&P1DIR            ;Output
-        BIC.W   #LED1,&P1OUT            ;Auschalten
+        BIS.B   #LED1,&P1DIR            ;Output
+        BIC.B   #LED1,&P1OUT            ;Auschalten
        
      
         BIC.B #B1,&P2DIR          ;If DIR 1 == Output, also 0 Input
         BIS.B #B1,&P2REN         ;IF Pull-Up oder Down = 1, Input without pull up or down = 0
-        BIC.B #B1,&P2OUT         ;If 0 == Pull Down, 1 == Pull Up
+        BIS.B #B1,&P2OUT         ;If 0 == Pull Down, 1 == Pull Up
 
-        BIC.B #B0,&P2DIR          ;If DIR 1 == Output, also 0 Input
-        BIS.B #B0,&P2REN         ;IF Pull-Up oder Down = 1, Input without pull up or down = 0
-        BIC.B #B0,&P2OUT         ;If 0 == Pull Down, 1 == Pull Up
+        BIC.B #B0,&P1DIR          ;If DIR 1 == Output, also 0 Input
+        BIS.B #B0,&P1REN         ;IF Pull-Up oder Down = 1, Input without pull up or down = 0
+        BIS.B #B0,&P1OUT         ;If 0 == Pull Down, 1 == Pull Up
   
 Ausschalten:
-      BIC.W   #LED1,&P1OUT            ;Auschalten  
+      BIC.B   #LED1,&P1OUT            ;Auschalten  
 InFloop:
-        BIT.B #B1,&P2IN               ;Tastergedruckt?
+        BIT.B #B0,&P1IN               ;Tastergedruckt?
         JNZ InFloop
 Einscahlten:
-        BIS.W   #LED1,&P1OUT            ;Einschalten
+        BIS.B   #LED1,&P1OUT            ;Einschalten
         
 InfLoopTwo:
         BIT.B #B1,&P2IN               ;Tastergedruckt?
