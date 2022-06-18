@@ -17,18 +17,18 @@ init:   MOV     #SFE(CSTACK), SP        ; set up stack
 main:   NOP                             ; main program
         MOV.W   #WDTPW+WDTHOLD,&WDTCTL  ; Stop watchdog timer
        
-        BIS.W   #LED1,&P1DIR            ;Output
-        BIC.W   #LED1,&P1OUT            ;Auschalten
+        BIS.B   #LED1,&P1DIR            ;Output
+        BIC.B   #LED1,&P1OUT            ;Auschalten
      
         BIC.B #B1,&P2DIR          ;If DIR 1 == Output, also 0 Input
         BIS.B #B1,&P2REN         ;IF Pull-Up oder Down = 1, Input without pull up or down = 0
-        BIC.B #B1,&P2OUT         ;If 0 == Pull Down, 1 == Pull Up
-        
+        BIS.B #B1,&P2OUT         ;If 0 == Pull Down, 1 == Pull Up
+          
 InFloop:
         BIT.B #B1,&P2IN               ;Tastergedruckt?
         JNZ InFloop
 TasterDrucken:
-        BIS.W   #LED1,&P1OUT            ;Einschalten
+        BIS.B   #LED1,&P1OUT            ;Einschalten
         JMP InFloop
         
 
