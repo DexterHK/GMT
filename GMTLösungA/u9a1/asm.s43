@@ -16,11 +16,11 @@ init:   MOV     #SFE(CSTACK), SP        ; set up stack
 
 main:   NOP                             ; main program
         MOV.W   #WDTPW+WDTHOLD,&WDTCTL  ; Stop watchdog timer
-        BIS.W   #LED1,&P1DIR            ;Output
-        BIS.W   #LED1,&P1OUT            ; Einschalten
+        BIS.B   #LED1,&P1DIR            ;Output
+        BIS.B   #LED1,&P1OUT            ; Einschalten
          
-        BIS.W   #LED2,&P4DIR            ;Output 
-        BIC.W   #LED2,&P4OUT            ; Ausschalten
+        BIS.B   #LED2,&P4DIR            ;Output 
+        BIC.B   #LED2,&P4OUT            ; Ausschalten
         
 
         JMP $                           ; jump to current location '$'
