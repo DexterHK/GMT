@@ -60,76 +60,76 @@ TimerBusy:
         MOV.W &ADC12MEM0, R5          ;no: copy conversion result to R5
 
 WaitRandom:
-       CALL #WaitingEasy
-       DEC  R5
-       JNZ WaitRandom
+       CALL #WaitingEasy              ; One "easy" einfaches Delay aufrufen
+       DEC  R5                       ;  Decrementiere R5
+       JNZ WaitRandom                ; Wenn R5 nicht 0 ist, dann Jump zu WaitRandom
 
 GrunOn:
         BIS.B   #LED2,&P4OUT          ; aufleuchten
 PressButtonTwo:
-        INC R6
-        ADC R8
-        BIT.B #S2, &P2IN  
-        JNZ PressButtonTwo
+        INC R6                       ;Incrementiere R6. R6 ist unser Counter
+        ADC R8                       ;Bei overflow sollte R8 incrementiert werden
+        BIT.B #S2, &P2IN             ; Warte auf Tastendruck
+        JNZ PressButtonTwo           ; Kein Tastendruck == GOTO PressButtonTwo  
 
-Calculate:
-       CMP.B #0x1,R8
-       JGE Three
-       CMP.W #010000000000000B,R6
-       JGE One
-       JMP Two
+Calculate:                           ;Calculate berechnet, wie schnell der Tastendruck war
+       CMP.B #0x1,R8                ;Falls ein overflow gab
+       JGE Three                    ; Leuchte dreimal
+       CMP.W #010000000000000B,R6   ; #010000000000000B => Der Wert, der unterscheidet, ob es 1 oder 2 mal leuchten soll.
+       JGE One                      ; Ist das Register R6 kleiner als der Wert => Leuchte einmal
+       JMP Two                     ; Ist das Register R6 größer als der Wert => Leuchte zweimal
 
-       
-One:
-      CALL #Light
-      JMP WaitForReset
-
-Two:
-      CALL #Light
-      CALL #Waiting
-      CALL #Light
-      JMP WaitForReset
+  ;Option 1     
+One: ;Leuchte einmal
+      CALL #Light      ;Call Light
+      JMP WaitForReset   ;GOTO WaitForReset => Auf reset button warten
+;Option 2
+Two:                ;Leuchte Zweimal
+      CALL #Light  ;Call Light
+      CALL #Waiting  ; Call Delay
+      CALL #Light     ;Call Light
+      JMP WaitForReset ;GOTO WaitForReset => Auf reset button warten
    
-      
-Three:
-      CALL #Light
-      CALL #Waiting
-      CALL #Light
-      CALL #Waiting
-      CALL #Light
-      JMP WaitForReset
+ ;Option 3     
+Three:               ;Leuchte dreimal
+      CALL #Light       ;Call Light
+      CALL #Waiting     ; Call Delay
+      CALL #Light       ;Call Light
+      CALL #Waiting    ;Call Delay
+      CALL #Light       ;Call Light
+      JMP WaitForReset   ;GOTO WaitForReset => Auf reset button warten
       
 WaitForReset:
-      BIT.B #Reset, &P1IN
-      JNZ WaitForReset
-      JMP Reseting
+      BIT.B #Reset, &P1IN   ;1. Warte auf Tastendruck
+      JNZ WaitForReset      ;2. Fall keinen gibt => GOTO 1
+      JMP Reseting          ;Fall einen gibt => GOTO Reset
       
-Reseting:
-      mov #0x0,R6
+Reseting:                   ;Alle Register auf 0 setzen und zurück zum Code-Anfang springen
+      mov #0x0,R6          
       mov #0x0,R7
       mov #0x0,R8
       JMP TimerBusy
       
 
 Waiting:
-       INC.W  R7
-       CMP.W #Delay,R7
-       JNE   Waiting
-       MOV.W #0x0,R7
-       ret
+       INC.W  R7              ;1. Increment R7    
+       CMP.W #Delay,R7       ;2. Ist 50000 == R7?
+       JNE   Waiting         ;3. Falls nicht Equal => 50000 != R7 => GOTO 1
+       MOV.W #0x0,R7         ;Ist R7 == 50000 => Setze R7 um 0
+       ret                   ;Return
       
 Light:
-      BIC.B  #LED2,&P4OUT            
-      BIS.B  #LED1,&P1OUT            
-      CALL   #Waiting
-      BIC.B  #LED1,&P1OUT            ;Auschalten 
+      BIC.B  #LED2,&P4OUT           ;Grünes LED Ausschalten 
+      BIS.B  #LED1,&P1OUT           ;Rotes LED Einschalten
+      CALL   #Waiting               ; Warte 
+      BIC.B  #LED1,&P1OUT            ;Rotes LED Auschalten 
       ret
  
-WaitingEasy:
-       INC.W  R9
-       CMP.W #DelayEasy,R9
-       JNE   WaitingEasy
-       MOV.W #0x0,R9
+WaitingEasy: 
+       INC.W  R9                  ;1. Inkrementiere den 3 Counter
+       CMP.W #DelayEasy,R9        ;2. Ist R9 == 100 ? 
+       JNE   WaitingEasy          ; Falls 2 falsch ist => gehe zurück zu 1
+       MOV.W #0x0,R9              ; R9 um 0 setzen
        ret
 
 
